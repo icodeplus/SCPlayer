@@ -2,8 +2,7 @@
 #define SCWINDOW_H
 #include <memory>
 #include <string>
-
-struct SDL_Window;
+#include "SDL.h"
 
 #define DEFAULT_WINDOWPOS -1
 
@@ -13,10 +12,21 @@ public:
     SCWindow();
     SCWindow(const void *nativeWindow);
     SCWindow(const std::string& title, int x = DEFAULT_WINDOWPOS, int y = DEFAULT_WINDOWPOS, int width = 640, int height = 480, unsigned int flags = 0);
-    ~SCWindow();
+    virtual ~SCWindow();
 
     bool Init();
+    unsigned int GetWindowID() const;
 
+protected:
+    virtual int HandleEvent(SDL_Event *event);
+    virtual int HandleWindowEvent(SDL_WindowEvent *event);
+    virtual int HandleKeyboardEvent(SDL_KeyboardEvent *event);
+    virtual int HandleMouseMotionEvent(SDL_MouseMotionEvent *event);
+    virtual int HandleMouseButtonEvent(SDL_MouseButtonEvent *event);
+    virtual int HandleMouseWheelEvent(SDL_MouseWheelEvent *event);
+
+private:
+    static int SDLCALL Envent_Filter(void *userdata, SDL_Event *event);
 
 private:
     const void *_nativeWindow;
